@@ -119,7 +119,7 @@ for i=1:size(specimens,2) % loop over all specimens
                 %disp_url=0;
                 %disp_details=0;
             specimen = download_specimen(specimen_name,disp_url); %Offline Zeile
-            [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file,[],n,specimen,gene_list,map_threshold,search_mode,struct_id,disp_url,disp_details);
+            [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file,[],n,specimen,gene_list,map_threshold,search_mode,struct_id,disp_url,disp_details,parameter);
             %%% Add zscores to main struct
             maps(j).validated_zscores=zscores_of_validated_corrs;
             maps(j).correlation_coeff=[];
@@ -151,7 +151,7 @@ for i=1:size(specimens,2) % loop over all specimens
         
         %% Do the computation.
         specimen = download_specimen(specimen_name,disp_url); 
-        [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file,[],n,specimen,gene_list,map_threshold,tmp_search_mode,struct_id,disp_url,disp_details);
+        [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file,[],n,specimen,gene_list,map_threshold,tmp_search_mode,struct_id,disp_url,disp_details,parameter);
         maps(1).validated_zscores=zscores_of_validated_corrs;
         maps(1).correlation_coeff=[];
         maps(1).specimen=specimen_name;
@@ -171,7 +171,7 @@ for i=1:size(specimens,2) % loop over all specimens
         varlist = {'top_corrs','samples','probes','x_label_cell','x_label_str'};
         clear(varlist{:})
         specimen = download_specimen(specimen_name,disp_url); 
-        [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file,[],n,specimen,gene_list,map_threshold,search_mode,struct_id,disp_url,disp_details);
+        [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file,[],n,specimen,gene_list,map_threshold,search_mode,struct_id,disp_url,disp_details,parameter);
         maps(2).validated_zscores=zscores_of_validated_corrs;
         maps(2).correlation_coeff=[];
         maps(2).specimen=specimen_name;

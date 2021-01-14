@@ -1,6 +1,6 @@
 % Get a list of probes that are differentially 
 % expressed between contrast vs. target structures 
-function [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file, ~, ~, specimen, gene_list,map_threshold,search_mode,struct_id,disp_url,disp_detail)
+function [samples,probes,zscores_of_validated_corrs,data_2_plot] = expression_spm_correlation(activation_file, ~, ~, specimen, gene_list,map_threshold,search_mode,struct_id,disp_url,disp_detail,parameter)
 
 display_TB_details=disp_detail;
 
@@ -71,11 +71,11 @@ if search_mode==2
     end
 else
 
-[zscores_of_validated_corrs,data_2_plot] = filter_sample_positions(activation_file, samples, explevels,zscores, specimen.alignment3d, map_threshold,display_TB_details);
+[zscores_of_validated_corrs,data_2_plot] = filter_sample_positions(activation_file, samples, explevels,zscores, specimen.alignment3d, map_threshold,display_TB_details,parameter);
 end
 
 % Compute the correlation between expression levels and spm voxels.
-function [zscores,data_2_plot] = filter_sample_positions(activation_file,samples, explevels, zscores, MNI,map_threshold,display_TB_details)
+function [zscores,data_2_plot] = filter_sample_positions(activation_file,samples, explevels, zscores, MNI,map_threshold,display_TB_details,parameter)
 
 % Load the activation and mask images.   
 spmhd = spm_vol(activation_file);  %%% evtl. Header nicht kompatibel????
@@ -99,6 +99,48 @@ end
 
 % Filter the exp levels and coordinates to only include the valid ones.
 % extract well ids
+try
+    sf_config = jsondecode(fileread('sf.json'));
+    display_TB_details=str2num(sf_config.display_detail);
+    
+    disp('sf.json file in pwd detected');
+    disp('continue with following parameter');
+    disp(' ');
+    disp(['Display mode: ' sf_config.display_detail]);
+    disp(' ');
+    disp(['SF active for VOI1: ' sf_config.activate_voi_1_sf]);
+    disp(['VOI1 SF: ' sf_config.voi_1_sf]);
+    disp(['SF active for VOI2: ' sf_config.activate_voi_2_sf]);
+    disp(['VOI2 SF: ' sf_config.voi_2_sf]);  
+    disp('press any key to continue');
+    pause()
+    % prüfen ob gerade VOI1 oder VOI2 ausgewertet wird
+    if strcmp(activation_file,parameter.pmap{1,1}) %VOI1 wird gerade bearbeitet
+        if strcmp(sf_config.activate_voi_1_sf,'1')%prüfe ob SF für erste VOI aktiviert werden soll
+            filter_strings=sf_config.voi_1_sf;% setzte SF auf Wert aus JSON
+        else %filter soll für VOI1 nicht aktiviert werden
+            filter_strings={''};
+        end
+    end
+    % prüfen ob gerade VOI1 oder VOI2 ausgewertet wird
+    
+    if strcmp(activation_file,parameter.pmap{1,2})%VOI2 wird gerade bearbeitet
+        if strcmp(sf_config.activate_voi_2_sf,'1')%prüfe ob SF für zweites VOI aktiviert werden soll
+            filter_strings=sf_config.voi_2_sf;% setzte SF auf Wert aus JSON
+        else %filter soll für VOI2 nicht aktiviert werden
+            filter_strings={''};
+        end
+    end
+    
+    
+catch
+    disp('No sf.json file in pwd detected. Continue without sematic filtering');
+    pause();
+    filter_strings={''};
+end
+
+
+
 
 for i=1:size(samples,2)
     well_id(i)=samples{1,i}.sample.well;
@@ -109,7 +151,10 @@ for i=1:size(samples,2)
     % include semantic Filter => here hardcoded 'insu'  should be cell
     % array in order to allow for more than user chosen structure
     %filter_strings={'anterior orbital gyrus','lateral orbital gyrus','inferior frontal gyrus, orbital part'};
-    filter_strings={''};
+    %filter_strings={''};
+    
+    %%%%%%%%%%%filter string muss ein cell sein!!!!
+    
     sf_true(i)=0;
     for check_filter_strings=1:size(filter_strings,2)
         if isempty(filter_strings{1})
@@ -145,7 +190,7 @@ coords = coords(:,valid);
 nsamples = size(coords,2);
 data_2_plot={coords,zscores,explevels,well_id};
 [~,name,~] = fileparts(activation_file);  % nicht geprüft ob es geht, wenn zwei maps genommen werden. ausgabe geprüft mit map gegen aba macro label
-if display_TB_details==1
+if display_TB_details==1 
 for t=1:size(explevels,1)
 fprintf('Donor: %s\tMap: %s\tStructure: %s\tWell_ID: %d\tMRI: %d %d %d\n',donor_name{t},name,structure_name{t},well_id(t),mri_raw(t,:))
 end
