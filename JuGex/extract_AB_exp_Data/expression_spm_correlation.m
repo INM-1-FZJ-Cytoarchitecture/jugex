@@ -103,21 +103,23 @@ try
     sf_config = jsondecode(fileread('sf.json'));
     display_TB_details=str2num(sf_config.display_detail);
     
-    disp('sf.json file in pwd detected');
-    disp('continue with following parameter');
-    disp(' ');
-    disp(['Display mode: ' sf_config.display_detail]);
-    disp(' ');
-    disp(['SF active for VOI1: ' sf_config.activate_voi_1_sf]);
-    disp(['VOI1 SF: ' sf_config.voi_1_sf]);
-    disp(['SF active for VOI2: ' sf_config.activate_voi_2_sf]);
-    disp(['VOI2 SF: ' sf_config.voi_2_sf]);  
-    disp('press any key to continue');
-    pause()
+%     disp('sf.json file in pwd detected');
+%     disp('continue with following parameter');
+%     disp(' ');
+%     disp(['Display mode: ' sf_config.display_detail]);
+%     disp(' ');
+%     disp(['SF active for VOI1: ' sf_config.activate_voi_1_sf]);
+%     disp(['VOI1 SF: ' sf_config.voi_1_sf]);
+%     disp(['SF active for VOI2: ' sf_config.activate_voi_2_sf]);
+%     disp(['VOI2 SF: ' sf_config.voi_2_sf]);  
+    %disp('press any key to continue');
+    
+   
+    %pause()
     % prüfen ob gerade VOI1 oder VOI2 ausgewertet wird
     if strcmp(activation_file,parameter.pmap{1,1}) %VOI1 wird gerade bearbeitet
         if strcmp(sf_config.activate_voi_1_sf,'1')%prüfe ob SF für erste VOI aktiviert werden soll
-            filter_strings=sf_config.voi_1_sf;% setzte SF auf Wert aus JSON
+            filter_strings= regexp(sf_config.voi_1_sf,'''(.*?)''','tokens');% setzte SF auf Wert aus JSON
         else %filter soll für VOI1 nicht aktiviert werden
             filter_strings={''};
         end
@@ -126,7 +128,7 @@ try
     
     if strcmp(activation_file,parameter.pmap{1,2})%VOI2 wird gerade bearbeitet
         if strcmp(sf_config.activate_voi_2_sf,'1')%prüfe ob SF für zweites VOI aktiviert werden soll
-            filter_strings=sf_config.voi_2_sf;% setzte SF auf Wert aus JSON
+            filter_strings=regexp(sf_config.voi_2_sf,'''(.*?)''','tokens');% setzte SF auf Wert aus JSON
         else %filter soll für VOI2 nicht aktiviert werden
             filter_strings={''};
         end
@@ -134,7 +136,16 @@ try
     
     
 catch
-    disp('No sf.json file in pwd detected. Continue without sematic filtering');
+    disp(' ');
+    disp(' ');
+    disp('No sf.json file in pwd detected.');
+    disp(' ');
+    disp('OR');
+    disp(' ');
+    disp('there was a problem reading the sf.json file (sf.json file is not formatted correctly).');
+    disp(' ');
+    disp(' ');
+    disp('Press any key to ontinue without sematic filtering');
     pause();
     filter_strings={''};
 end
@@ -150,7 +161,7 @@ for i=1:size(samples,2)
     
     % include semantic Filter => here hardcoded 'insu'  should be cell
     % array in order to allow for more than user chosen structure
-    %filter_strings={'anterior orbital gyrus','lateral orbital gyrus','inferior frontal gyrus, orbital part'};
+    %filter_strings={'anterior orbital gyrus','lateral orbital  gyrus','inferior frontal gyrus, orbital part'};
     %filter_strings={''};
     
     %%%%%%%%%%%filter string muss ein cell sein!!!!
@@ -172,7 +183,9 @@ end
 
 valid = sum(coords>0)==3;
 % include semantic filter => pairwise multiply valid with sf_true to eliminate samples which are inside the map but not on semantic filter structure 
-sprintf('%03d orig filtered TBs; %03d sf filtered TBs   => %03d remaining TBs',sum(valid),sum(sf_true),sum(valid.*sf_true))
+[~,map_name,map_ext] = fileparts(activation_file);
+fprintf('\n\nVOI: %s\n',map_name);
+fprintf('%03d orig filtered TBs; %03d sf filtered TBs   => %03d remaining TBs\n',sum(valid),sum(sf_true),sum(valid.*sf_true));
 valid=logical(valid.*sf_true);
 well_id=well_id';
 well_id=well_id(valid,:);
@@ -190,7 +203,7 @@ coords = coords(:,valid);
 nsamples = size(coords,2);
 data_2_plot={coords,zscores,explevels,well_id};
 [~,name,~] = fileparts(activation_file);  % nicht geprüft ob es geht, wenn zwei maps genommen werden. ausgabe geprüft mit map gegen aba macro label
-if display_TB_details==1 
+if display_TB_details==2 
 for t=1:size(explevels,1)
 fprintf('Donor: %s\tMap: %s\tStructure: %s\tWell_ID: %d\tMRI: %d %d %d\n',donor_name{t},name,structure_name{t},well_id(t),mri_raw(t,:))
 end
