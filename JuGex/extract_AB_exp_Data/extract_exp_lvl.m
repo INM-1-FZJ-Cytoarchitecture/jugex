@@ -9,11 +9,14 @@ elseif output_mode==1
 elseif output_mode==2
     disp_url=0;
     disp_details=1;
+elseif output_mode==3
+    disp_url=1;
+    disp_details=1;
 end
 
 %close all;
 %clear;
-clc;
+%clc;
 tic;
 if strcmp(mode,'man')
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

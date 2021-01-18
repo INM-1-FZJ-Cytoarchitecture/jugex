@@ -50,7 +50,7 @@ display_TB_details=disp_detail;
 %   /Redundante Rückgabe aus Funktion. Zur Überprüfung der Zuordnung von
 %   Exp Level zur Probe_Id
 
-if search_mode==2
+if search_mode==2     % search mode 2 => VOI vs ABA macro Label
     corrs='';
     zscores_of_validated_corrs=zscores;
     spmhd = spm_vol(activation_file);
@@ -136,17 +136,17 @@ try
     
     
 catch
-    disp(' ');
-    disp(' ');
-    disp('No sf.json file in pwd detected.');
-    disp(' ');
-    disp('OR');
-    disp(' ');
-    disp('there was a problem reading the sf.json file (sf.json file is not formatted correctly).');
-    disp(' ');
-    disp(' ');
-    disp('Press any key to ontinue without sematic filtering');
-    pause();
+%     disp(' ');
+%     disp(' ');
+%     disp('No sf.json file in pwd detected.');
+%     disp(' ');
+%     disp('OR');
+%     disp(' ');
+%     disp('there was a problem reading the sf.json file (sf.json file is not formatted correctly).');
+%     disp(' ');
+%     disp(' ');
+%     disp('Press any key to ontinue without sematic filtering');
+%     pause();
     filter_strings={''};
 end
 

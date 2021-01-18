@@ -82,6 +82,9 @@ function pushbutton_start_analysis_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % 
 myhandles = guihandles(gcf);
+
+clc;
+
 output_parameter.pmap={get(myhandles.text_area1,'TooltipString'),get(myhandles.text_area2,'TooltipString')};
 output_parameter.name={get(myhandles.edit_name_area1,'String'),get(myhandles.edit_name_area2,'String')};
 output_parameter.gene_list={get(myhandles.text_gene_list,'TooltipString')};
@@ -109,7 +112,41 @@ for i=1:size(curval,2)
 end
 output_parameter.donors=donors;
 save('latest_settings.mat','output_parameter');
-extract_exp_lvl('gui',output_parameter,2);% last parameter: 0, no output during download, 1, print api urls, 2, print tissueblock details
+% changes to include SF via json file
+try
+    sf_config = jsondecode(fileread('sf.json'));
+    display_TB_details=str2num(sf_config.display_detail);
+    
+    disp('sf.json file in pwd detected');
+    disp('continue with following parameter');
+    disp(' ');
+    disp(['Display mode: ' sf_config.display_detail]);
+    disp(' ');
+    disp(['SF active for VOI1: ' sf_config.activate_voi_1_sf]);
+    disp(['VOI1 SF: ' sf_config.voi_1_sf]);
+    disp(['SF active for VOI2: ' sf_config.activate_voi_2_sf]);
+    disp(['VOI2 SF: ' sf_config.voi_2_sf]);
+    disp(' ');
+    disp('==============================================================================');
+    disp(' ');
+    %disp('press any key to continue');
+    
+    
+catch
+    disp(' ');
+    disp(' ');
+    disp('No sf.json file in pwd detected.');
+    disp(' ');
+    disp('OR');
+    disp(' ');
+    disp('there was a problem reading the sf.json file (sf.json file is not formatted correctly).');
+    disp(' ');
+    disp(' ');
+    disp('Press any key to ontinue without sematic filtering');
+    display_TB_details=3;
+    pause();
+end
+extract_exp_lvl('gui',output_parameter,display_TB_details);% last parameter: 0, no output during download, 1, print api urls, 2, print tissueblock details
 
 function edit8_Callback(hObject, eventdata, handles)
 % hObject    handle to text_output_folder (see GCBO)
@@ -300,7 +337,7 @@ function pushbutton_select_area1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_select_area1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[filename, pathname] = uigetfile({'*.hdr';'*.nii'},'Select first map',['.' filesep 'maps' filesep]);
+[filename, pathname] = uigetfile({'*.nii';'*.hdr'},'Select first map',['.' filesep 'maps' filesep]);
 f = fullfile(pathname,filename);
 [pathstr,name,ext] = fileparts(filename);
 parts = strsplit(pathname, filesep);
@@ -316,7 +353,7 @@ function pushbutton_select_area2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_select_area2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[filename, pathname] = uigetfile({'*.hdr';'*.nii'},'Select second map',['.' filesep 'maps' filesep]);
+[filename, pathname] = uigetfile({'*.nii';'*.hdr'},'Select second map',['.' filesep 'maps' filesep]);
 f = fullfile(pathname,filename);
 [pathstr,name,ext] = fileparts(filename);
 parts = strsplit(pathname, filesep);
