@@ -24,6 +24,13 @@ end
 
 load(path_result_mat);
 
+p_value_based_sample_allocation=1;
+if p_value_based_sample_allocation==1
+    % function pval_filter is saved in utilities and removes duplicate
+    % entries of main_r only the TS with the higher pval will be kept
+    [main_r,TS]=pval_filter(main_r);
+end
+
 
 [~,name_res_mat,~]=fileparts(path_result_mat);
 th = name_res_mat(end-3:end);
@@ -137,7 +144,13 @@ end
 %%%% switch Search mode; 1== combine genes using winzorized_mean; 2== using
 %%%% individual probe_id values
 if search_mode==1
+    if p_value_based_sample_allocation~=1
+    % function pval_filter is saved in utilities and removes duplicate
+    % entries of main_r only the TS with the higher pval will be kept
+    % without it the debug info will not be visible
     clc;
+    end
+    
     disp(' ');
     disp('########################################');
     disp('####      Gene-level Analysis      #####');
@@ -154,7 +167,12 @@ if search_mode==1
     Reference_Anovan_diff_mean=zeros(1,n_genes);
     F_vec_ref_anovan=zeros(1,n_genes);
 elseif search_mode==2
+    if p_value_based_sample_allocation~=1
+    % function pval_filter is saved in utilities and removes duplicate
+    % entries of main_r only the TS with the higher pval will be kept
+    % without it the debug info will not be visible
     clc;
+    end
     disp(' ');
     disp('########################################');
     disp('####      Gene-level Analysis      #####');
@@ -173,6 +191,11 @@ end
 if search_mode==2
     n_genes=size(combined_zscores,2);
 end
+
+% filter TS which are included in both maps, the TS will be used only for
+% the area with the higher p val at the TS position
+
+
 
 %%%% define factors to analyze
 % factors={factor_area_numeric factor_specimen_numeric}; varnames = {'Area';'Specimen'};
