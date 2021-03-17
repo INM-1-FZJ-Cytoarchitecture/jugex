@@ -25,12 +25,15 @@ end
 load(path_result_mat);
 
 p_value_based_sample_allocation=1;
-if p_value_based_sample_allocation==1
-    % function pval_filter is saved in utilities and removes duplicate
-    % entries of main_r only the TS with the higher pval will be kept
-    [main_r,TS]=pval_filter(main_r);
-end
 
+if ~isempty(area1_name) && ~isempty(area2_name)  % If one map name is empty we compare map vs ABA label, so we can not assign sample by pval since there is no pval for ABA label ;-)
+    
+    if p_value_based_sample_allocation==1
+        % function pval_filter is saved in utilities and removes duplicate
+        % entries of main_r only the TS with the higher pval will be kept
+        [main_r,TS]=pval_filter(main_r);
+    end
+end
 
 [~,name_res_mat,~]=fileparts(path_result_mat);
 th = name_res_mat(end-3:end);
