@@ -2,6 +2,8 @@
 # JuGEx - Julich-Brain Gene Expression
 **Cytoarchitecture linked to gene expression to study multilevel human brain organization**
 
+![JuGEx_overview_image](jugex.jpg?raw=true "jugexxx")
+
 Decoding the chain from genes to cognition requires detailed insights how areas with specific gene activities and microanatomical architectures contribute to brain function and dysfunction. The Allen Human Brain Atlas <sup>[[1]](#1)</sup> contains regional gene expression data, while the Julich-Brain Atlas <sup>[[2]](#2)</sup> offers three-dimensional cytoarchitectonic maps reflecting the interindividual variability. JuGEx offers an integrated framework that combines the analytical benefits of both repositories towards a multi-level brain atlas of adult humans. JuGEx is a new method for integrating tissue transcriptome and cytoarchitectonic segregation.
 
 JuGEx finds differentially expressed genes based on a user-defined candidate gene list between two user-defined volumes of interest (Julich-Brain maps or other volume of interest in MNI152 reference space <sup>[[3]](#3)</sup>). The tool downloads expression values via the Allen Brain API, which are further analysed using a permuted n-way ANOVA.
