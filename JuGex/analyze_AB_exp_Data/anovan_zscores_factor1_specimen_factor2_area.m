@@ -496,6 +496,7 @@ fprintf('Num permutations : %d \n\n',n_rep);
 fprintf('Gene list        : %s \n',gene_liste_name);
 toc;
 diary off
+citation_policy
 end
 
 
