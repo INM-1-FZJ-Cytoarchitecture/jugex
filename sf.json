@@ -1,0 +1,7 @@
+{
+ "_comment_display_detail":"0=> no output; 1=> print api urls; 2=> print tissueblock details; 3=> print api urls and tissueblock details",
+ "display_detail":"3",
+ "activate_voi_1_sf":"0",
+ "voi_1_sf":"''",
+ "activate_voi_2_sf":"0",
+ "voi_2_sf":"''"}
