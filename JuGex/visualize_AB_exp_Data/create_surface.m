@@ -541,6 +541,7 @@ strn = regexprep(ugs{gene_index},'"','');
 set(gcf,'NumberTitle','off');
 string=[area1_name '_vs_' area2_name '_Gene_' strn];
 set(gcf,'Name',string);
+TS = sortrows(TS,'area','ascend');
 writetable(TS,['.' filesep 'output' filesep 'img' filesep string '_TS_data.txt']);
 save_str=['.' filesep 'output' filesep 'img' filesep area1_name '_vs_' area2_name '_Gene_' strn '_th_' parameter.map_threshold{:} '.fig'];
 savefig(save_str);
@@ -554,7 +555,7 @@ print(gcf,save_str,'-dpng')
 
 
 toc;
-TS = sortrows(TS,'area','ascend');
+
 TS
 %create_movie
 end
