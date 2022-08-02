@@ -105,42 +105,55 @@ end
 clear TS
 
 variable_names_types = [["area", "categorical"]; ...
-            ["x","double"];...
-            ["y","double"];...
-            ["z","double"];...
-            ["well_id","double"];...
-            ["pval","double"]];
+    ["x","double"];...
+    ["y","double"];...
+    ["z","double"];...
+    ["well_id","double"];...
+    ["pval","double"]];
 % Make table using fieldnames & value types from above
-TS = table('Size',[0,size(variable_names_types,1)],... 
-	'VariableNames', variable_names_types(:,1),...
-	'VariableTypes', variable_names_types(:,2));
+TS = table('Size',[0,size(variable_names_types,1)],...
+    'VariableNames', variable_names_types(:,1),...
+    'VariableTypes', variable_names_types(:,2));
 
 counter=1;
+
+ontology = readtable('tmp_ontology.csv');
 
 for i=1:size(main_r,2)
     %%%%hier muss der Fall abgefangen werden das gegen ABA Label gerechnet
     %%%%wird, dann ist main_r(i).pmap leer!!!
-    if isempty(main_r(i).pmap)
-        continue;
-    else
+    if ~isempty(main_r(i).pmap)
         map=spm_vol(main_r(i).pmap);
         map_vol=spm_read_vols(map);
-        for j=1:size(main_r(i).validated_zscores,1)
-
-            x=main_r(i).data2plot{1, 1}(1,j);
-            y=main_r(i).data2plot{1, 1}(2,j);
-            z=main_r(i).data2plot{1, 1}(3,j);
-            well_id=main_r(i).data2plot{1, 4}(j);        
-            %sprintf('Area: %s    Koordinate: [%d %d %d]    well_id:%d',main_r(i).name,x,y,z,well_id)
-            warning off
+    end
+    for j=1:size(main_r(i).validated_zscores,1)
+        
+        x=main_r(i).data2plot{1, 1}(1,j);
+        y=main_r(i).data2plot{1, 1}(2,j);
+        z=main_r(i).data2plot{1, 1}(3,j);
+        if ~isempty(main_r(i).pmap)
+        well_id=main_r(i).data2plot{1, 4}(j);
+        end
+        %sprintf('Area: %s    Koordinate: [%d %d %d]    well_id:%d',main_r(i).name,x,y,z,well_id)
+        warning off
+        if isempty(main_r(i).pmap)
+            %TS.area(counter)='ABA Label';
+            TS.area(counter)=ontology.name{ontology.id==str2num(main_r(i).name)};
+        else
             TS.area(counter)=main_r(i).name;
-            TS.x(counter)=x;
-            TS.y(counter)=y;
-            TS.z(counter)=z;
+        end
+        TS.x(counter)=x;
+        TS.y(counter)=y;
+        TS.z(counter)=z;
+        if isempty(main_r(i).pmap)
+            TS.well_id(counter)=0;
+            TS.pval(counter)=0;
+        else
             TS.well_id(counter)=well_id;
             TS.pval(counter)=map_vol(x,y,z);
-            warning on;
-            counter=counter+1;
         end
+        TS.pval(counter)=map_vol(x,y,z);
+        warning on;
+        counter=counter+1;
     end
 end

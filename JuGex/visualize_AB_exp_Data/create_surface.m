@@ -554,7 +554,7 @@ print(gcf,save_str,'-dpng')
 
 
 toc;
-
+TS = sortrows(TS,'area','ascend');
 TS
 %create_movie
 end
