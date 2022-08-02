@@ -20,26 +20,30 @@ TS = table('Size',[0,size(variable_names_types,1)],...
 for i=1:size(main_r,2)
     %%%%hier muss der Fall abgefangen werden das gegen ABA Label gerechnet
     %%%%wird, dann ist main_r(i).pmap leer!!!
-    map=spm_vol(main_r(i).pmap);
-    map_vol=spm_read_vols(map);
-    for j=1:size(main_r(i).validated_zscores,1)
-        
-        x=main_r(i).data2plot{1, 1}(1,j);
-        y=main_r(i).data2plot{1, 1}(2,j);
-        z=main_r(i).data2plot{1, 1}(3,j);
-        well_id=main_r(i).data2plot{1, 4}(j);     % ABA Label Extraktion hat keine well_id  muss eingebaut werden   
-        %sprintf('Area: %s    Koordinate: [%d %d %d]    well_id:%d',main_r(i).name,x,y,z,well_id)
-        warning off
-        TS.area(counter)=main_r(i).name;
-        TS.x(counter)=x;
-        TS.y(counter)=y;
-        TS.z(counter)=z;
-        TS.i(counter)=i;
-        TS.j(counter)=j;
-        TS.well_id(counter)=well_id;
-        TS.pval(counter)=map_vol(x,y,z);
-        warning on;
-        counter=counter+1;
+    if isempty(main_r(i).pmap)
+        continue;
+    else
+        map=spm_vol(main_r(i).pmap);
+        map_vol=spm_read_vols(map);
+        for j=1:size(main_r(i).validated_zscores,1)
+            
+            x=main_r(i).data2plot{1, 1}(1,j);
+            y=main_r(i).data2plot{1, 1}(2,j);
+            z=main_r(i).data2plot{1, 1}(3,j);
+            well_id=main_r(i).data2plot{1, 4}(j);     % ABA Label Extraktion hat keine well_id  muss eingebaut werden
+            %sprintf('Area: %s    Koordinate: [%d %d %d]    well_id:%d',main_r(i).name,x,y,z,well_id)
+            warning off
+            TS.area(counter)=main_r(i).name;
+            TS.x(counter)=x;
+            TS.y(counter)=y;
+            TS.z(counter)=z;
+            TS.i(counter)=i;
+            TS.j(counter)=j;
+            TS.well_id(counter)=well_id;
+            TS.pval(counter)=map_vol(x,y,z);
+            warning on;
+            counter=counter+1;
+        end
     end
     
 end
@@ -114,24 +118,29 @@ TS = table('Size',[0,size(variable_names_types,1)],...
 counter=1;
 
 for i=1:size(main_r,2)
-    map=spm_vol(main_r(i).pmap);
-    map_vol=spm_read_vols(map);
-    for j=1:size(main_r(i).validated_zscores,1)
-        
-        x=main_r(i).data2plot{1, 1}(1,j);
-        y=main_r(i).data2plot{1, 1}(2,j);
-        z=main_r(i).data2plot{1, 1}(3,j);
-        well_id=main_r(i).data2plot{1, 4}(j);        
-        %sprintf('Area: %s    Koordinate: [%d %d %d]    well_id:%d',main_r(i).name,x,y,z,well_id)
-        warning off
-        TS.area(counter)=main_r(i).name;
-        TS.x(counter)=x;
-        TS.y(counter)=y;
-        TS.z(counter)=z;
-        TS.well_id(counter)=well_id;
-        TS.pval(counter)=map_vol(x,y,z);
-        warning on;
-        counter=counter+1;
+    %%%%hier muss der Fall abgefangen werden das gegen ABA Label gerechnet
+    %%%%wird, dann ist main_r(i).pmap leer!!!
+    if isempty(main_r(i).pmap)
+        continue;
+    else
+        map=spm_vol(main_r(i).pmap);
+        map_vol=spm_read_vols(map);
+        for j=1:size(main_r(i).validated_zscores,1)
+
+            x=main_r(i).data2plot{1, 1}(1,j);
+            y=main_r(i).data2plot{1, 1}(2,j);
+            z=main_r(i).data2plot{1, 1}(3,j);
+            well_id=main_r(i).data2plot{1, 4}(j);        
+            %sprintf('Area: %s    Koordinate: [%d %d %d]    well_id:%d',main_r(i).name,x,y,z,well_id)
+            warning off
+            TS.area(counter)=main_r(i).name;
+            TS.x(counter)=x;
+            TS.y(counter)=y;
+            TS.z(counter)=z;
+            TS.well_id(counter)=well_id;
+            TS.pval(counter)=map_vol(x,y,z);
+            warning on;
+            counter=counter+1;
+        end
     end
-    
 end
