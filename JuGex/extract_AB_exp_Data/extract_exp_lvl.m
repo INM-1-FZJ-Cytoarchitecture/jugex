@@ -192,9 +192,13 @@ try
 end
 % aufbau main_r
 
-%data_2_plot={coords,zscores,explevels,well_id};
+%data_2_plot={coords,zscores,explevels,well_id,structure_name};
 
 main_r(1) = [];
+var_apply_post_sf=0;
+if var_apply_post_sf==1
+    main_r=apply_post_sf(main_r,0,0);   
+end
 str=[output_folder filesep 'extracted_data' filesep project_name '_th_' map_threshold '.mat'];
 save(str,'main_r')
 str=[output_folder filesep 'extracted_data' filesep project_name '_th_' map_threshold '_parameter.mat'];

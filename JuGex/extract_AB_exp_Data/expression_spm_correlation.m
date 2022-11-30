@@ -201,7 +201,7 @@ explevels = explevels(valid,:);
 zscores = zscores(valid,:);
 coords = coords(:,valid);
 nsamples = size(coords,2);
-data_2_plot={coords,zscores,explevels,well_id};
+data_2_plot={coords,zscores,explevels,well_id,structure_name};
 [~,name,~] = fileparts(activation_file);  % nicht geprüft ob es geht, wenn zwei maps genommen werden. ausgabe geprüft mit map gegen aba macro label
 if display_TB_details==2 
 for t=1:size(explevels,1)
