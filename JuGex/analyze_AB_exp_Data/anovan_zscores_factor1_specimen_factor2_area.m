@@ -497,6 +497,25 @@ fprintf('Gene list        : %s \n',gene_liste_name);
 toc;
 diary off
 citation_policy
+% write F values to text file
+
+if search_mode==1
+    F_values.gene_symbol=gene_symbol';
+    F_values.probe_id=probe_id';
+    F_values.F_ref_anovan=F_vec_ref_anovan';
+    F_values.FWE_corrected_perm_p_vals=FWE_corrected_p';
+end
+if search_mode==2
+    F_values.gene_symbol=gene_symbol;
+    F_values.probe_id=probe_id;
+    F_values.F_ref_anovan=F_vec_ref_anovan';
+    F_values.FWE_corrected_perm_p_vals=FWE_corrected_p';
+end
+F_values=struct2table(F_values);
+F_values_file_str=[path  filesep  name_res_mat '_F_values.txt'];
+writetable(F_values,F_values_file_str);
+
+% end write F values to text file
 end
 
 
