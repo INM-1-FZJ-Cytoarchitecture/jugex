@@ -16,3 +16,6 @@ JuGEx finds differentially expressed genes based on a user-defined candidate gen
 
 ## Cite As
 Bludau, Sebastian, et al. “Integration of Transcriptomic and Cytoarchitectonic Data Implicates a Role for MAOA and TAC1 in the Limbic-Cortical Network.” Brain Structure and Function, vol. 223, no. 5, Springer Science and Business Media LLC, Feb. 2018, pp. 2335–42, doi:10.1007/s00429-018-1620-6.
+
+
+[![View JuGEx - Julich-Brain Gene Expression on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://de.mathworks.com/matlabcentral/fileexchange/80916-jugex-julich-brain-gene-expression)
